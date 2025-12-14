@@ -1,0 +1,16 @@
+{
+  "name": "riposte",
+  "version": "1.0.0",
+  "main": "build-quartiers-geojson.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@tmcw/togeojson": "^7.1.2",
+    "xmldom": "^0.6.0"
+  }
+}
