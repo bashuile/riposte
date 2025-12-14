@@ -4,120 +4,124 @@ import { execFileSync } from "child_process";
 
 const OUT_DIR = path.join(process.cwd(), "assets", "data", "drihl-kml");
 
-// Territoires : formats de noms légèrement différents (Paris vs banlieue)
+// On essaie en priorité ce v (celui de tes URLs qui marchent)
+const V_TRY = ["202406_01", "202306_01", "202206_01", "202106_01", "202506_01"];
+
+// On essaie plusieurs dossiers de date (plaine/est: 06-01, paris: 07-01)
+function dateFoldersFor06() {
+  return ["2025-06-01", "2024-06-01", "2023-06-01", "2022-06-01", "2021-06-01"];
+}
+function dateFoldersFor07() {
+  return ["2025-07-01", "2024-07-01", "2023-07-01", "2022-07-01", "2021-07-01"];
+}
+
 const TERRITORIES = [
   {
     slug: "plaine-commune",
     base: "https://www.referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr/plaine-commune",
-    dateFolderTemplate: (year) => `${year}-06-01`,
+    dateFolders: dateFoldersFor06(),
     filename: ({ layer, pieces, era, furnished }) =>
       `drihl_${layer}_appartement_${pieces}_${era}_${furnished}.kml`,
   },
   {
     slug: "est-ensemble",
     base: "https://www.referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr/est-ensemble",
-    dateFolderTemplate: (year) => `${year}-06-01`,
+    dateFolders: dateFoldersFor06(),
     filename: ({ layer, pieces, era, furnished }) =>
       `drihl_${layer}_appartement_${pieces}_${era}_${furnished}.kml`,
   },
   {
     slug: "paris",
     base: "https://www.referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr/paris",
-    dateFolderTemplate: (year) => `${year}-07-01`,
+    dateFolders: dateFoldersFor07(),
     filename: ({ layer, pieces, era, furnished }) =>
       `drihl_${layer}_${pieces}_${era}_${furnished}.kml`,
   },
 ];
 
-// Périodes à couvrir (tu veux 2021-2022 → 2025-2026)
-const CAMPAIGNS = [
-  { label: "2021-2022", year: 2021, v: "202106_01" },
-  { label: "2022-2023", year: 2022, v: "202206_01" },
-  { label: "2023-2024", year: 2023, v: "202306_01" },
-  { label: "2024-2025", year: 2024, v: "202406_01" },
-  { label: "2025-2026", year: 2025, v: "202506_01" },
-];
-
-// On récupère la couche "medianes" (= loyer de référence).
-// Le majoré (= +20%) sera calculé ensuite dans build-drihl-geojson.
+// On commence petit : on télécharge les MEDIANES (= ref). Le majoré sera calculé après.
 const LAYERS = ["medianes"];
-
-// Champs à tester
 const PIECES = [1, 2, 3, 4];
+
+// Important: dans TES URLs, les eras sont "1971-1990" etc, et "Apres 1990" sans accent.
+// Pour "Avant 1946", le site peut aussi utiliser "Avant 1946" (avec espace).
+// On garde ça mais on encode correctement dans l’URL via encodeURI(file).
 const ERAS = ["Avant 1946", "1946-1970", "1971-1990", "Apres 1990"];
+
+// Tes URLs utilisent "meuble" / "non_meuble"
 const FURNISHED = ["meuble", "non_meuble"];
 
 function ensureDir(p) {
   fs.mkdirSync(p, { recursive: true });
 }
 
-function encodePathSegment(s) {
-  // encodeURIComponent suffit pour les espaces/accents ; on garde les '-' et '_' OK
-  return encodeURIComponent(s);
-}
-
-function buildUrl({ base, dateFolder, filename, v }) {
-  // On encode le filename (contient espaces/accents)
-  const fileEnc = encodePathSegment(filename);
-  return `${base}/kml/${dateFolder}/${fileEnc}?v=${encodeURIComponent(v)}`;
-}
-
 function curlDownload(url, outPath) {
-  // Télécharge dans outPath, échoue si HTTP != 200
-  // -L follow redirects, --fail -> code erreur si 4xx/5xx
-  execFileSync(
-    "curl",
-    ["-L", "--fail", "-A", "Mozilla/5.0", "-o", outPath, "-sS", url],
-    { stdio: "ignore" }
-  );
+  // -L follow redirects, --fail -> erreur si 4xx/5xx
+  execFileSync("curl", ["-L", "--fail", "-A", "Mozilla/5.0", "-o", outPath, "-sS", url], {
+    stdio: "ignore",
+  });
+}
+
+function tryDownload(urls, outPath) {
+  for (const url of urls) {
+    try {
+      curlDownload(url, outPath);
+      return { ok: true, url };
+    } catch {
+      // ignore
+    }
+  }
+  try { fs.unlinkSync(outPath); } catch {}
+  return { ok: false };
 }
 
 async function main() {
   ensureDir(OUT_DIR);
 
   for (const t of TERRITORIES) {
-    for (const c of CAMPAIGNS) {
-      const dateFolder = t.dateFolderTemplate(c.year);
-      const outDir = path.join(OUT_DIR, t.slug, c.label);
-      ensureDir(outDir);
+    const tDir = path.join(OUT_DIR, t.slug);
+    ensureDir(tDir);
 
-      let ok = 0;
-      let miss = 0;
-      let debugShown = 0;
+    let ok = 0;
+    let miss = 0;
+    let shownFails = 0;
 
-      for (const layer of LAYERS) {
-        for (const pieces of PIECES) {
-          for (const era of ERAS) {
-            for (const furnished of FURNISHED) {
-              const file = t.filename({ layer, pieces, era, furnished });
-              const url = buildUrl({
-                base: t.base,
-                dateFolder,
-                filename: file,
-                v: c.v,
-              });
-              const outPath = path.join(outDir, file);
+    for (const layer of LAYERS) {
+      for (const pieces of PIECES) {
+        for (const era of ERAS) {
+          for (const furnished of FURNISHED) {
+            const file = t.filename({ layer, pieces, era, furnished });
 
-              try {
-                curlDownload(url, outPath);
-                ok++;
-              } catch (e) {
-                miss++;
-                // Affiche quelques fails pour debug (sinon tu as "0" sans info)
-                if (debugShown < 8) {
-                  console.log(`❌ ${t.slug} ${c.label} fail -> ${url}`);
-                  debugShown++;
-                }
-                // supprime un éventuel fichier vide
-                try { fs.unlinkSync(outPath); } catch {}
+            // IMPORTANT: on encode le filename pour gérer espaces/accents proprement
+            const fileEnc = encodeURI(file);
+
+            // On tente plusieurs combinaisons folder + v
+            const urls = [];
+            for (const folder of t.dateFolders) {
+              for (const v of V_TRY) {
+                urls.push(`${t.base}/kml/${folder}/${fileEnc}?v=${encodeURIComponent(v)}`);
+              }
+            }
+
+            // On range par "territoire/filename" (pas par campagne pour l’instant)
+            const outPath = path.join(tDir, file.replaceAll("/", "_"));
+
+            const r = tryDownload(urls, outPath);
+            if (r.ok) {
+              ok++;
+            } else {
+              miss++;
+              if (shownFails < 6) {
+                console.log(`❌ ${t.slug} fail for: ${file} (example tried: ${urls[0]})`);
+                shownFails++;
               }
             }
           }
         }
       }
-
-      console.log(`📦 ${t.slug} ${c.label}: ${ok} OK, ${miss} miss (folder=${dateFolder}, v=${c.v})`);
     }
+
+    console.log(`📦 ${t.slug}: ${ok} OK, ${miss} miss`);
   }
 
   console.log("🎉 Téléchargement terminé.");
