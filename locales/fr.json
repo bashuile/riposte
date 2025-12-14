@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "title": "Votre loyer à Paris respecte-t-il la loi ?"
+  },
+  "brand": {
+    "name": "Loyer.Légal"
+  },
+  "lang": {
+    "label": "Langue"
+  },
+  "hero": {
+    "eyebrow": "Scanné depuis une annonce ?",
+    "title": "Votre loyer à Paris respecte-t-il la loi&nbsp;?",
+    "subtitle": "Entrez les infos de votre logement. On compare avec les plafonds légaux officiels de l’encadrement des loyers.",
+    "note": "Pas d’enregistrement automatique. Calcul indicatif basé sur les textes officiels."
+  },
+  "form": {
+    "address": {
+      "label": "Adresse du logement",
+      "placeholder": "N° + rue, arrondissement"
+    },
+    "surface": {
+      "label": "Surface",
+      "placeholder": "m²"
+    },
+    "rooms": {
+      "label": "Nombre de pièces",
+      "placeholder": "Sélectionner"
+    },
+    "rent": {
+      "label": "Loyer mensuel",
+      "placeholder": "€ hors charges"
+    },
+    "furnished": {
+      "label": "Type de location",
+      "placeholder": "Sélectionner…",
+      "unfurnished": "Location vide",
+      "furnished": "Location meublée"
+    },
+    "submit": "Vérifier mon loyer"
+    },
+
+    "results": {
+     "placeholder": "",
+     "loading": "Vérification en cours…",
+     "notInZone": "Votre logement n'est pas situé dans une zone d'encadrement.",
+     "zoneNotImplemented": "Cette zone est encadrée mais le calcul n'est pas encore disponible.",
+     "notFound": "Aucune donnée correspondante n’a été trouvée pour ce logement.",
+     "invalid": "Calcul impossible avec les données fournies.",
+     "error": "Une erreur est survenue pendant le calcul.",
+     "ok": "Votre loyer est conforme",
+     "high": "Votre loyer dépasse le plafond de {diff} €.",
+     "notInZone": "L’encadrement des loyers n’est actuellement pris en charge que pour Paris, Plaine Commune et Est Ensemble."
+    },
+ 
+
+  "benefits": {
+    "title": "Ce que ce site fait pour vous",
+    "instant": {
+      "title": "Vérification instantanée",
+      "text": "On compare votre loyer aux plafonds de l’encadrement des loyers en vigueur à Paris pour votre type de logement."
+    },
+    "letter": {
+      "title": "Lettre prête à envoyer",
+      "text": "Si le loyer dépasse le plafond, un modèle d’e-mail ou de courrier vous est proposé pour demander une mise en conformité."
+    },
+    "help": {
+      "title": "Accompagnement humain",
+      "text": "Vous pouvez nous contacter et envoyer votre bail pour un coup de main plus personnalisé."
+    }
+  },
+  "steps": {
+    "title": "Comment ça se passe&nbsp;?",
+    "step1": {
+      "title": "Vous entrez vos infos",
+      "text": "Adresse, surface, loyer, meublé ou vide."
+    },
+    "step2": {
+      "title": "On vérifie le plafond légal",
+      "text": "On calcule le loyer de référence majoré applicable à votre logement."
+    },
+    "step3": {
+      "title": "Vous agissez en confiance",
+      "text": "Vous obtenez une lettre prête à être envoyée à votre propriétaire."
+    }
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "q1": {
+      "title": "Est-ce un service officiel&nbsp;?",
+      "text": "Non, c’est un outil indépendant. Les calculs se basent sur les textes officiels (arrêtés d’encadrement des loyers) mais ne remplacent pas un conseil juridique."
+    },
+    "q2": {
+      "title": "Est-ce gratuit&nbsp;?",
+      "text": "Oui, la vérification et le modèle de courrier sont gratuits. L’accompagnement personnalisé peut être encadré à part si nécessaire."
+    },
+    "q3": {
+      "title": "Que faites-vous de mes données&nbsp;?",
+      "text": "Par défaut, rien n’est enregistré. Si vous nous contactez, vos informations servent uniquement à traiter votre demande."
+    }
+  },
+  "contact": {
+    "title": "Besoin d’aide pour votre bail&nbsp;?",
+    "text": "Envoyez-nous un message avec les informations principales. Vous pourrez ensuite joindre votre bail par e-mail si besoin.",
+    "email": {
+      "label": "Votre e-mail",
+      "placeholder": "vous@example.com"
+    },
+    "message": {
+      "label": "Message",
+      "placeholder": "Expliquez rapidement votre situation."
+    },
+    "submit": "Envoyer ma demande",
+    "note": "Vous recevrez une réponse par e-mail. Vous pourrez ensuite joindre votre bail en pièce jointe si nécessaire."
+  },
+
+  "footer": {
+    "disclaimer": "Outil informatif, sans valeur juridique. Pour un conseil personnalisé, rapprochez-vous d’une association de locataires ou d’un professionnel du droit."
+  }
+  
+}
+

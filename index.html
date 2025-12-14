@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="meta.title">Votre loyer à Paris respecte-t-il la loi ?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Police Google (facultatif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-brand">
+      <span class="brand-dot"></span>
+      <span class="brand-text" data-i18n="brand.name">Loyer.Légal</span>
+    </div>
+
+    <div class="header-lang-switch">
+      <label for="lang-switcher" class="sr-only" data-i18n="lang.label">
+        Langue
+      </label>
+      <select id="lang-switcher">
+        <option value="fr">FR</option>
+        <option value="en">EN</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO : titre + mini explication + formulaire -->
+    <section class="hero" id="top">
+      <div class="hero-inner">
+        <p class="hero-eyebrow" data-i18n="hero.eyebrow">
+          Scanné depuis une annonce ?
+        </p>
+
+        <h1 class="hero-title" data-i18n="hero.title">
+          Votre loyer à Paris respecte-t-il la loi&nbsp;?
+        </h1>
+
+        <p class="hero-subtitle" data-i18n="hero.subtitle">
+          Entrez les infos de votre logement. On compare avec les plafonds légaux
+          officiels de l’encadrement des loyers.
+        </p>
+
+<form class="hero-form" id="rent-form" action="#" method="post">
+
+  <!-- Adresse -->
+  <label class="field">
+    <span class="field-label" data-i18n="form.address.label">Adresse du logement</span>
+    <input
+      type="text"
+      id="address-input"
+      name="address"
+      autocomplete="off"
+      data-i18n-placeholder="form.address.placeholder"
+      required
+    >
+    <ul id="address-suggestions" class="address-suggestions"></ul>
+  </label>
+
+  <!-- Surface + Loyer -->
+  <div class="field-grid">
+    <label class="field">
+      <span class="field-label" data-i18n="form.surface.label">Surface</span>
+      <input type="number" name="surface" min="5" step="0.1"
+             data-i18n-placeholder="form.surface.placeholder"
+             placeholder="m²" required>
+    </label>
+
+    <label class="field">
+      <span class="field-label" data-i18n="form.rent.label">Loyer mensuel</span>
+      <input type="number" name="rent" min="0" step="1"
+             data-i18n-placeholder="form.rent.placeholder"
+             placeholder="€ hors charges" required>
+    </label>
+  </div>
+
+  <!-- Type de location -->
+  <label class="field">
+    <span class="field-label" data-i18n="form.furnished.label">
+      Type de location
+    </span>
+    <select name="furnished" required>
+      <option value="" data-i18n="form.furnished.placeholder">Sélectionner…</option>
+      <option value="unfurnished" data-i18n="form.furnished.unfurnished">
+        Location vide
+      </option>
+      <option value="furnished" data-i18n="form.furnished.furnished">
+        Location meublée
+      </option>
+    </select>
+  </label>
+
+  <!-- Pièces -->
+  <label class="field">
+    <span class="field-label" data-i18n="form.rooms.label">
+      Nombre de pièces principales
+    </span>
+    <select name="rooms">
+      <option value="" data-i18n="form.rooms.placeholder">Sélectionner…</option>
+      <option value="1">1 pièce</option>
+      <option value="2">2 pièces</option>
+      <option value="3">3 pièces</option>
+      <option value="4">4 pièces et +</option>
+    </select>
+  </label>
+
+  <!-- Période du bail -->
+  <label class="field">
+    <span class="field-label" data-i18n="form.leaseDate">
+      Période de signature du bail
+    </span>
+    <select name="leasePeriod">
+      <option value="">Sélectionner…</option>
+      <option value="2019">Juillet 2019 – Juin 2023</option>
+      <option value="2020">Juillet 2020 – Juin 2023</option>
+      <option value="2021">Juillet 2021 – Juin 2023</option>
+      <option value="2022">Juillet 2022 – Juin 2023</option>
+      <option value="2023">Juillet 2023 – Juin 2024</option>
+      <option value="2024">Juillet 2024 – Juin 2025</option>
+      <option value="2025">Juillet 2025 – Juin 2026</option>
+    </select>
+  </label>
+
+  <!-- Époque de construction -->
+  <label class="field">
+    <span class="field-label" data-i18n="form.construction.label">
+      Époque de construction
+    </span>
+    <select name="constructionEra">
+      <option value="">Sélectionner…</option>
+      <option value="old">Avant 1946</option>
+      <option value="mid">1946 – 1970</option>
+      <option value="late">1971 – 1990</option>
+      <option value="new">Après 1990</option>
+    </select>
+  </label>
+
+  <button type="submit" class="btn-primary" data-i18n="form.submit">
+    Vérifier mon loyer
+  </button>
+
+  <p class="hero-note" data-i18n="hero.note">
+    Pas d’enregistrement automatique. Calcul indicatif basé sur les textes officiels.
+  </p>
+
+  <div class="hero-result" id="hero-result" aria-live="polite"></div>
+</form>
+
+      </div>
+    </section>
+
+    <!-- SECTION : bénéfices -->
+    <section class="section section-benefits">
+      <div class="section-inner">
+        <h2 class="section-title" data-i18n="benefits.title">
+          Ce que ce site fait pour vous
+        </h2>
+        <div class="cards-grid">
+          <article class="card">
+            <h3 data-i18n="benefits.instant.title">Vérification instantanée</h3>
+            <p data-i18n="benefits.instant.text">
+              On compare votre loyer aux plafonds de l’encadrement des loyers en vigueur
+              à Paris pour votre type de logement.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3 data-i18n="benefits.letter.title">Lettre prête à envoyer</h3>
+            <p data-i18n="benefits.letter.text">
+              Si le loyer dépasse le plafond, un modèle d’e-mail ou de courrier
+              vous est proposé pour demander une mise en conformité.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3 data-i18n="benefits.help.title">Accompagnement humain</h3>
+            <p data-i18n="benefits.help.text">
+              Vous pouvez nous contacter et envoyer votre bail pour un coup de main
+              plus personnalisé.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION : étapes -->
+    <section class="section section-steps">
+      <div class="section-inner">
+        <h2 class="section-title" data-i18n="steps.title">
+          Comment ça se passe&nbsp;?
+        </h2>
+        <ol class="steps-list">
+          <li class="step">
+            <span class="step-number">1</span>
+            <div class="step-body">
+              <h3 data-i18n="steps.step1.title">Vous entrez vos infos</h3>
+              <p data-i18n="steps.step1.text">
+                Adresse, surface, loyer, meublé ou vide.
+              </p>
+            </div>
+          </li>
+
+          <li class="step">
+            <span class="step-number">2</span>
+            <div class="step-body">
+              <h3 data-i18n="steps.step2.title">On vérifie le plafond légal</h3>
+              <p data-i18n="steps.step2.text">
+                On calcule le loyer de référence majoré applicable à votre logement.
+              </p>
+            </div>
+          </li>
+
+          <li class="step">
+            <span class="step-number">3</span>
+            <div class="step-body">
+              <h3 data-i18n="steps.step3.title">Vous agissez en confiance</h3>
+              <p data-i18n="steps.step3.text">
+                Vous obtenez une lettre prête à être envoyée à votre propriétaire.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- SECTION : FAQ -->
+    <section class="section section-faq">
+      <div class="section-inner">
+        <h2 class="section-title" data-i18n="faq.title">
+          Questions fréquentes
+        </h2>
+
+        <details class="faq-item">
+          <summary data-i18n="faq.q1.title">
+            Est-ce un service officiel&nbsp;?
+          </summary>
+          <p data-i18n="faq.q1.text">
+            Non, c’est un outil indépendant. Les calculs se basent sur les textes officiels
+            (arrêtés d’encadrement des loyers) mais ne remplacent pas un conseil juridique.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary data-i18n="faq.q2.title">
+            Est-ce gratuit&nbsp;?
+          </summary>
+          <p data-i18n="faq.q2.text">
+            Oui, la vérification et le modèle de courrier sont gratuits.
+            L’accompagnement personnalisé peut être encadré à part si nécessaire.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary data-i18n="faq.q3.title">
+            Que faites-vous de mes données&nbsp;?
+          </summary>
+          <p data-i18n="faq.q3.text">
+            Par défaut, rien n’est enregistré. Si vous nous contactez, vos informations
+            servent uniquement à traiter votre demande.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- SECTION : contact -->
+    <section class="section section-contact" id="contact">
+      <div class="section-inner">
+        <h2 class="section-title" data-i18n="contact.title">
+          Besoin d’aide pour votre bail&nbsp;?
+        </h2>
+        <p class="section-text" data-i18n="contact.text">
+          Envoyez-nous un message avec les informations principales.
+          Vous pourrez ensuite joindre votre bail par e-mail si besoin.
+        </p>
+
+        <form class="contact-form" action="#" method="post">
+          <label class="field">
+            <span class="field-label" data-i18n="contact.email.label">
+              Votre e-mail
+            </span>
+            <input
+              type="email"
+              name="email"
+              data-i18n-placeholder="contact.email.placeholder"
+              placeholder="vous@example.com"
+              required
+            >
+          </label>
+
+          <label class="field">
+            <span class="field-label" data-i18n="contact.message.label">
+              Message
+            </span>
+            <textarea
+              name="message"
+              rows="4"
+              data-i18n-placeholder="contact.message.placeholder"
+              placeholder="Expliquez rapidement votre situation."
+              required
+            ></textarea>
+          </label>
+
+          <button type="submit" class="btn-secondary" data-i18n="contact.submit">
+            Envoyer ma demande
+          </button>
+
+          <p class="contact-note" data-i18n="contact.note">
+            Vous recevrez une réponse par e-mail. Vous pourrez ensuite joindre votre bail
+            en pièce jointe si nécessaire.
+          </p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p class="footer-text" data-i18n="footer.disclaimer">
+      Outil informatif, sans valeur juridique.
+      Pour un conseil personnalisé, rapprochez-vous d’une association de locataires
+      ou d’un professionnel du droit.
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

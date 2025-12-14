@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "title": "Is your rent in Paris legal?"
+  },
+  "brand": {
+    "name": "Loyer.Legal"
+  },
+  "lang": {
+    "label": "Language"
+  },
+  "hero": {
+    "eyebrow": "Scanned from a listing?",
+    "title": "Is your rent in Paris legal?",
+    "subtitle": "Enter your rental information. We compare it to the official legal rent caps in Paris.",
+    "note": "No automatic storage. Indicative calculation based on official regulations."
+  },
+  "form": {
+    "address": {
+      "label": "Rental address",
+      "placeholder": "Street + number, district"
+    },
+    "surface": {
+      "label": "Floor area",
+      "placeholder": "sqm"
+    },
+    "rent": {
+      "label": "Monthly rent",
+      "placeholder": "€ excluding charges"
+    },
+    "furnished": {
+      "label": "Type of rental",
+      "placeholder": "Select…",
+      "unfurnished": "Unfurnished",
+      "furnished": "Furnished"
+    },
+    "submit": "Check my rent"
+  },
+  "benefits": {
+    "title": "What this site does for you",
+    "instant": {
+      "title": "Instant check",
+      "text": "We compare your rent to the legal rent caps in Paris for your type of dwelling."
+    },
+    "letter": {
+      "title": "Letter ready to send",
+      "text": "If your rent is above the cap, we suggest an email or letter template to ask for compliance."
+    },
+    "help": {
+      "title": "Human support",
+      "text": "You can contact us and send your lease to get more personalised help."
+    }
+  },
+  "steps": {
+    "title": "How does it work?",
+    "step1": {
+      "title": "You enter your details",
+      "text": "Address, floor area, rent, furnished or unfurnished."
+    },
+    "step2": {
+      "title": "We check the legal cap",
+      "text": "We calculate the applicable maximum reference rent for your dwelling."
+    },
+    "step3": {
+      "title": "You act with confidence",
+      "text": "You get a letter ready to send to your landlord."
+    }
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "q1": {
+      "title": "Is this an official service?",
+      "text": "No, this is an independent tool. Calculations are based on official regulations but do not replace legal advice."
+    },
+    "q2": {
+      "title": "Is it free?",
+      "text": "Yes, the check and letter template are free. Personalised support may be handled separately if needed."
+    },
+    "q3": {
+      "title": "What do you do with my data?",
+      "text": "By default, nothing is stored. If you contact us, your data is used only to process your request."
+    }
+  },
+  "contact": {
+    "title": "Need help with your lease?",
+    "text": "Send us a message with the main information. You’ll then be able to attach your lease by email if needed.",
+    "email": {
+      "label": "Your email",
+      "placeholder": "you@example.com"
+    },
+    "message": {
+      "label": "Message",
+      "placeholder": "Briefly describe your situation."
+    },
+    "submit": "Send my request",
+    "note": "You will receive a reply by email. You can then attach your lease if necessary."
+  },
+   "results": {
+    "loading": "Checking rent regulations…",
+    "notInZone": "This property is not located within a regulated rental zone.",
+    "zoneNotImplemented": "This area is regulated but calculation is not yet supported.",
+    "notFound": "No matching data was found for this property.",
+    "invalid": "Calculation error with provided data.",
+    "error": "An error occurred during calculation.",
+    "ok": "✅ Rent is compliant: €{rent} ≤ legal limit €{legalMax}",
+    "high": "🚨 Rent exceeds the legal limit by €{diff} (€{rent} instead of €{legalMax})",
+    "notInZone": "Rent control is currently supported only for Paris, Plaine Commune and Est Ensemble areas."
+  },
+  "footer": {
+    "disclaimer": "Informational tool, not legal advice. For tailored advice, contact a tenants’ association or a legal professional."
+  }
+}
