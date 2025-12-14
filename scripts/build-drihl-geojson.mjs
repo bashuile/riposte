@@ -3,8 +3,8 @@ import path from "path";
 import { DOMParser } from "xmldom";
 import { kml } from "@tmcw/togeojson";
 
-const IN_DIR  = path.join(process.cwd(), "website", "assets", "data", "drihl-kml");
-const OUT_DIR = path.join(process.cwd(), "website", "assets", "data", "drihl-geojson");
+const IN_DIR = path.join(process.cwd(), "assets", "data", "drihl-kml");
+const OUT_DIR = path.join(process.cwd(), "assets", "data", "drihl-geojson");
 
 function ensureDir(p) {
   fs.mkdirSync(p, { recursive: true });
@@ -13,6 +13,7 @@ function ensureDir(p) {
 function walk(dir) {
   const out = [];
   if (!fs.existsSync(dir)) return out;
+
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, entry.name);
     if (entry.isDirectory()) out.push(...walk(p));
@@ -21,19 +22,32 @@ function walk(dir) {
   return out;
 }
 
-function parseAnyNumberFromProperties(props) {
-  // Essayons d'extraire un nombre de n'importe quelle propriété (y compris description HTML).
-  for (const v of Object.values(props || {})) {
+// Heuristique: beaucoup de KML mettent la valeur dans properties.description (HTML)
+// On récupère le 1er nombre raisonnable trouvé.
+function extractReferenceValue(props = {}) {
+  const candidates = [];
+
+  for (const v of Object.values(props)) {
     if (typeof v !== "string") continue;
-    const m = v
-      .replace(/\s/g, " ")
-      .match(/(\d{1,3}(?:[.,]\d+)?)/); // 27.4 ou 27,4
-    if (m) {
-      const num = parseFloat(m[1].replace(",", "."));
-      if (Number.isFinite(num)) return num;
+    const s = v.replace(/\s+/g, " ");
+
+    // capture nombre 12.3 / 12,3
+    const matches = s.match(/(\d{1,3}(?:[.,]\d+)?)/g);
+    if (matches) {
+      for (const m of matches) {
+        const num = parseFloat(m.replace(",", "."));
+        if (Number.isFinite(num)) candidates.push(num);
+      }
     }
   }
-  return null;
+
+  if (!candidates.length) return null;
+
+  // souvent la valeur est petite (10-60). On filtre un peu.
+  const plausible = candidates.filter((n) => n > 1 && n < 200);
+  if (plausible.length) return plausible[0];
+
+  return candidates[0];
 }
 
 function roundToNearestTenth(x) {
@@ -45,13 +59,12 @@ function convertOne(inPath, outPath) {
   const dom = new DOMParser().parseFromString(xml);
   const gj = kml(dom);
 
-  // on enrichit les features : reference + majoré
   for (const f of (gj.features || [])) {
-    const ref = parseAnyNumberFromProperties(f.properties);
+    f.properties = f.properties || {};
+    const ref = extractReferenceValue(f.properties);
     if (Number.isFinite(ref)) {
-      f.properties = f.properties || {};
-      f.properties.ref = ref;
-      f.properties.majore = roundToNearestTenth(ref * 1.2); // ✅ règle que tu veux
+      f.properties.ref = ref; // loyer de référence (médiane)
+      f.properties.majore = roundToNearestTenth(ref * 1.2); // ✅ majoré
     }
   }
 
@@ -64,14 +77,14 @@ function main() {
 
   const files = walk(IN_DIR);
   console.log(`📦 KML trouvés: ${files.length}`);
-  if (!files.length) process.exit(0);
+  if (!files.length) return;
 
   let converted = 0;
 
-  for (const f of files) {
-    const rel = path.relative(IN_DIR, f);
+  for (const file of files) {
+    const rel = path.relative(IN_DIR, file);
     const out = path.join(OUT_DIR, rel.replace(/\.kml$/i, ".geojson"));
-    convertOne(f, out);
+    convertOne(file, out);
     converted++;
   }
 

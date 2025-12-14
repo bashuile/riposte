@@ -1,0 +1,37 @@
+name: Build DRIHL data (KML -> GeoJSON)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 1 * *" # 1er du mois, 06:00 UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install deps (for KML->GeoJSON)
+        run: |
+          npm init -y
+          npm i @tmcw/togeojson xmldom
+
+      - name: Download DRIHL KML
+        run: node scripts/download-drihl-kml.mjs
+
+      - name: Build GeoJSON (add ref + majore)
+        run: node scripts/build-drihl-geojson.mjs
+
+      - name: Commit generated data
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add assets/data/drihl-kml assets/data/drihl-geojson package.json package-lock.json
+          git commit -m "Update DRIHL data" || echo "Nothing to commit"
+          git push
